@@ -16,3 +16,4 @@ docs/
 deploy.txt
 
 .idea
+/lib
