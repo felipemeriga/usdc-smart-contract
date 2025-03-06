@@ -17,3 +17,7 @@ deploy.txt
 
 .idea
 /lib
+
+
+hardhat.config.js
+node_modules

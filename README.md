@@ -1,66 +1,51 @@
-## USD Foundry
+# USDC Smart Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This repo consists in a test USDC coin, to be used as an ERC-20 token.
 
-Foundry consists of:
+## Installing
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
+To install dependencies, you need to execute the following commands:
 
 ```shell
-$ forge build
+forge install foundry-rs/forge-std
+forge install OpenZeppelin/openzeppelin-contracts
 ```
 
-### Test
+Since the `remappings.txt` file is already present, there is no need to 
+adjust the dependencies in Solidity code.
 
+## Running
+
+For building the smart-contract, you can run:
 ```shell
-$ forge test
+forge build
 ```
 
-### Format
-
+For executing tests:
 ```shell
-$ forge fmt
+forge test -vv
 ```
 
-### Gas Snapshots
+## Deploying
 
+To deploy this smart-contract to Sepolia network, you can execute the following command:
 ```shell
-$ forge snapshot
+forge script script/DeployUSDCToken.s.sol --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY --broadcast
 ```
 
-### Anvil
+Remember to set the `SEPOLIA_RPC`, and `PRIVATE_KEY` environment variables.
 
+## Generating ABI
+
+After building the smart-contract, you can generate the ABI with that command:
 ```shell
-$ anvil
+ jq '.abi' out/uSDC.sol/uSDC.json > uSDC.abi
 ```
 
-### Deploy
-
+If you are using a tool like `abigen`, for interacting with the smart-contract in your
+Go code, you can execute this following command, after generating the ABI:
 ```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+ abigen --abi uSDC.abi --pkg usdc --out usdc.go
 ```
 
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+For the same ABI generator in Rust, you could use: [ethers-contract-abigen](https://crates.io/crates/ethers-contract-abigen)
