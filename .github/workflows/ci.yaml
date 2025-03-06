@@ -1,30 +1,48 @@
-name: Foundry CI/CD
+name: CI
 
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+env:
+  FOUNDRY_PROFILE: ci
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  check:
+    strategy:
+      fail-fast: true
 
+    name: Foundry project
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Show Forge version
         run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          source $HOME/.bashrc
-          foundryup
+          forge --version
 
       - name: Install Dependencies
         run: |
           forge install foundry-rs/forge-std
           forge install OpenZeppelin/openzeppelin-contracts
 
-      - name: Build Contracts
-        run: forge build
+      - name: Run Forge fmt
+        run: |
+          forge fmt --check
+        id: fmt
 
-      - name: Run Tests
-        run: forge test
+      - name: Run Forge build
+        run: |
+          forge build --sizes
+        id: build
+
+      - name: Run Forge tests
+        run: |
+          forge test -vvv
+        id: test
