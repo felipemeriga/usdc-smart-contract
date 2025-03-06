@@ -1,0 +1,30 @@
+name: Foundry CI/CD
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Foundry
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash
+          source ~/.foundry/bin/foundryup
+          foundryup
+
+      - name: Install Dependencies
+        run: |
+          forge install foundry-rs/forge-std
+          forge install OpenZeppelin/openzeppelin-contracts
+
+      - name: Build Contracts
+        run: forge build
+
+      - name: Run Tests
+        run: forge test
