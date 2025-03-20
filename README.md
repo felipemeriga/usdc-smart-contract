@@ -7,8 +7,8 @@ This repo consists in a test USDC coin, to be used as an ERC-20 token.
 To install dependencies, you need to execute the following commands:
 
 ```shell
-forge install foundry-rs/forge-std
-forge install OpenZeppelin/openzeppelin-contracts
+forge install foundry-rs/forge-std --no-commit
+forge install OpenZeppelin/openzeppelin-contracts --no-commit
 ```
 
 Since the `remappings.txt` file is already present, there is no need to 
